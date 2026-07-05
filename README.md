@@ -1,5 +1,7 @@
 # InsightFlow AI
 
+# Live Link: https://ai-website-audit-three.vercel.app
+
 **Analyze. Improve. Convert.** — AI-powered website audits for small businesses, in plain English.
 
 Local business owners know their website exists but have no idea whether it actually works. Tools like Lighthouse or GTmetrix report "CLS is poor" or "LCP is 4.2s" — meaningless to a dentist, restaurant owner, or salon. InsightFlow runs the same technical checks but translates every finding into business language:
