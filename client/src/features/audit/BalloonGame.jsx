@@ -48,6 +48,7 @@ export default function BalloonGame() {
             key={b.id}
             type="button"
             tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()} // decorative button must never take focus (aria-hidden ancestor)
             onClick={() => pop(b.id)}
             className="pointer-events-auto absolute top-0 cursor-pointer select-none leading-none"
             style={{ left: `${b.x}vw`, fontSize: b.size, filter: `hue-rotate(${b.hue}deg)` }}
