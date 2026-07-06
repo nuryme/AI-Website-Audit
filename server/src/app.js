@@ -14,6 +14,11 @@ import { leadsRouter } from './modules/leads/routes.js';
 export function createApp() {
   const app = express();
 
+  // Vercel (and most PaaS) put a proxy in front of us — without this, req.ip
+  // falls back to the proxy's socket address instead of X-Forwarded-For,
+  // which breaks anonId hashing (anonQuota.js) since it changes per request.
+  app.set('trust proxy', 1);
+
   app.use(helmet());
   app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
   app.use(express.json({ limit: '100kb' }));
