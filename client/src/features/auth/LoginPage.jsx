@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 import { loginSchema } from './schemas.js';
 import Input from '../../shared/components/Input.jsx';
@@ -9,6 +9,8 @@ import Button from '../../shared/components/Button.jsx';
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from ?? '/dashboard';
   const {
     register,
     handleSubmit,
@@ -16,7 +18,7 @@ export default function LoginPage() {
   } = useForm({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (values) =>
-    login.mutate(values, { onSuccess: () => navigate('/', { replace: true }) });
+    login.mutate(values, { onSuccess: () => navigate(from, { replace: true }) });
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
@@ -55,7 +57,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-secondary">
           No account?{' '}
-          <Link to="/register" className="font-medium text-accent hover:underline">
+          <Link to="/register" state={location.state} className="font-medium text-accent hover:underline">
             Create one
           </Link>
         </p>

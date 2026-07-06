@@ -32,8 +32,13 @@ export function useAuditProgress(id, initial) {
             clearInterval(poll);
             finish(audit.status);
           }
-        } catch {
-          /* transient — keep polling */
+        } catch (err) {
+          // err.status means the server actually responded (404/403/etc) — permanent, stop polling.
+          // No status means a network blip — keep retrying.
+          if (err.status) {
+            clearInterval(poll);
+            if (!closed) setProgress((p) => ({ ...p, error: err.message }));
+          }
         }
       }, 2000);
     };

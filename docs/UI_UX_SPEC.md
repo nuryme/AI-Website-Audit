@@ -39,7 +39,7 @@ Tokens defined once as CSS variables + Tailwind theme extension (`primary`, `sec
 - Headline: *"Is your website losing customers?"* Sub: *"Find out in less than 60 seconds."*
 - URL input + pink **Analyze Website** button. Yellow banner treatment, dark headline text.
 - Below fold: 3-step how-it-works, sample report teaser, footer.
-- Anonymous quota exhausted → inline prompt to create a free account.
+- Audits are free and unlimited without an account; signup is only needed to save a report as a lead.
 
 ### 3.2 Audit progress `/audit/:id` (running)
 - Staged checklist driven by SSE (poll fallback): Checking performance… ✓ Analyzing SEO… ✓ Checking accessibility… ✓ Checking security… ✓ Analyzing booking experience… ✓ Generating AI recommendations… ✓

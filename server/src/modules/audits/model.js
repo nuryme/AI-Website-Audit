@@ -74,10 +74,3 @@ auditSchema.index({ userId: 1, createdAt: -1 });
 auditSchema.index({ anonId: 1 });
 
 export const Audit = mongoose.model('Audit', auditSchema);
-
-const anonQuotaSchema = new mongoose.Schema({
-  ipHash: { type: String, required: true, unique: true },
-  count: { type: Number, default: 0 },
-});
-
-export const AnonQuota = mongoose.model('AnonQuota', anonQuotaSchema);

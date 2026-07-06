@@ -204,9 +204,29 @@ const CTA_LINES = {
   'free-audit-review': 'I’d be glad to walk you through everything I found, free.',
 };
 
-export function outreachTemplate(context, { channel, cta = 'reply' } = {}) {
-  const greeting = context.contactName ? `Hi ${context.contactName},` : `Hi ${context.businessName} team,`;
+// Tone still varies without AI: greeting/sign-off flex per style so Friendly, Professional,
+// CEO etc. don't all read identical while Gemini is unavailable.
+const STYLE_GREETING = {
+  friendly: (name, biz) => (name ? `Hey ${name},` : `Hey ${biz} team,`),
+  professional: (name, biz) => (name ? `Dear ${name},` : `Dear ${biz} team,`),
+  ceo: (name, biz) => (name ? `${name},` : `${biz} team,`),
+  luxury: (name, biz) => (name ? `Dear ${name},` : `Dear ${biz} team,`),
+  direct: (name, biz) => (name ? `${name} —` : `${biz} team —`),
+  casual: (name, biz) => (name ? `Hey ${name}!` : `Hey ${biz} team!`),
+};
+const STYLE_SIGNOFF = {
+  friendly: 'Cheers,',
+  professional: 'Best regards,',
+  ceo: '—',
+  luxury: 'Warm regards,',
+  direct: 'Thanks,',
+  casual: 'Talk soon,',
+};
+
+export function outreachTemplate(context, { channel, style = 'friendly', cta = 'reply' } = {}) {
   const biz = context.businessName;
+  const greeting = (STYLE_GREETING[style] ?? STYLE_GREETING.friendly)(context.contactName, biz);
+  const signoff = STYLE_SIGNOFF[style] ?? STYLE_SIGNOFF.friendly;
   const compliment = context.strengths?.length
     ? `First off — ${context.strengths[0]}, which puts you ahead of many local businesses.`
     : `You’ve clearly put real care into ${biz}.`;
@@ -226,7 +246,7 @@ ${problems}
 
 The good news: all of it is fixable, most of it quickly. ${ctaLine}
 
-Best regards`,
+${signoff}`,
     whatsapp: `${greeting} ${compliment} I had a look at your website and spotted a few things that may be costing you customers — all quickly fixable. ${ctaLine}`,
     linkedin: `${greeting} I looked at ${biz}'s website and found a few things that may be costing you customers — all fixable. ${ctaLine}`,
     proposal: `${greeting}

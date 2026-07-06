@@ -17,11 +17,11 @@ export default function LandingPage() {
         <p className="text-lg text-secondary dark:text-secondary-dark">Find out in less than 60 seconds.</p>
         <SubmitForm />
         <p className="text-xs text-secondary">
-          3 free audits — no signup needed.{' '}
+          Free, unlimited audits — no signup needed.{' '}
           <Link to="/register" className="font-medium text-accent hover:underline">
             Create an account
           </Link>{' '}
-          for unlimited.
+          to save your reports as leads.
         </p>
       </section>
 

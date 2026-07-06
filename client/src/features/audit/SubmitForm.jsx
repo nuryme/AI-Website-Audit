@@ -21,7 +21,6 @@ export default function SubmitForm() {
   });
 
   const onSubmit = ({ url, industry }) => mutation.mutate({ url: normalizeUrl(url), industry });
-  const quotaHit = mutation.isError && mutation.error.status === 403;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">
@@ -60,11 +59,7 @@ export default function SubmitForm() {
       </div>
 
       {mutation.isError && (
-        <p className="mt-3 rounded-lg bg-accent/10 px-3 py-2 text-sm text-accent">
-          {quotaHit
-            ? 'You’ve used your 3 free audits. Create a free account to keep going.'
-            : mutation.error.message}
-        </p>
+        <p className="mt-3 rounded-lg bg-accent/10 px-3 py-2 text-sm text-accent">{mutation.error.message}</p>
       )}
     </form>
   );

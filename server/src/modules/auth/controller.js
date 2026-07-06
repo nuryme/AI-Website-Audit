@@ -11,13 +11,13 @@ const cookieOptions = {
 };
 
 export const register = asyncHandler(async (req, res) => {
-  const { user, token } = await registerUser(req.validated);
+  const { user, token } = await registerUser(req.validated, req.anonId);
   res.cookie(COOKIE_NAME, token, cookieOptions);
   res.status(201).json({ user });
 });
 
 export const login = asyncHandler(async (req, res) => {
-  const { user, token } = await loginUser(req.validated);
+  const { user, token } = await loginUser(req.validated, req.anonId);
   res.cookie(COOKIE_NAME, token, cookieOptions);
   res.json({ user });
 });

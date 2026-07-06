@@ -1,7 +1,7 @@
 import { ApiError } from '../../utils/ApiError.js';
 import { validateAuditUrl } from '../../utils/ssrf.js';
 import { logger } from '../../config/logger.js';
-import { Audit, AnonQuota } from './model.js';
+import { Audit } from './model.js';
 import { runPipeline } from './pipeline.js';
 import { generateFix } from '../ai/index.js';
 import { FIX_FALLBACK } from '../ai/templates.js';
@@ -23,10 +23,6 @@ export async function createAudit({ url, industry, userId, anonId }) {
     userId: userId ?? null,
     anonId: anonId ?? null,
   });
-
-  if (!userId && anonId) {
-    await AnonQuota.updateOne({ ipHash: anonId }, { $inc: { count: 1 } }, { upsert: true });
-  }
 
   // Async, in-process — do NOT await; the request returns 202 immediately.
   runPipeline(audit.id).catch((err) => logger.error({ err, auditId: audit.id }, 'Pipeline rejected'));

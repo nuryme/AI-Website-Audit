@@ -3,7 +3,7 @@ import { z } from 'zod';
 import rateLimit from 'express-rate-limit';
 import { optionalAuth } from '../../middleware/optionalAuth.js';
 import { requireAuth } from '../../middleware/auth.js';
-import { anonIdentity, enforceAnonQuota } from '../../middleware/anonQuota.js';
+import { anonIdentity } from '../../middleware/anonQuota.js';
 import { validate } from '../../middleware/validate.js';
 import { createAuditSchema, fixSchema } from './validation.js';
 import { create, list, getOne, remove, favorite, events, downloadPdf, fix } from './controller.js';
@@ -16,16 +16,8 @@ const favoriteSchema = z.object({ favorite: z.boolean() });
 
 export const auditsRouter = Router();
 
-// Create: anonymous allowed (subject to quota) or logged in.
-auditsRouter.post(
-  '/',
-  createLimiter,
-  optionalAuth,
-  anonIdentity,
-  enforceAnonQuota,
-  validate(createAuditSchema),
-  create,
-);
+// Create: anonymous or logged in, unlimited — createLimiter is the only abuse guard.
+auditsRouter.post('/', createLimiter, optionalAuth, anonIdentity, validate(createAuditSchema), create);
 
 // Read: owner-scoped; anonymous callers see their own (by hashed-IP anonId).
 auditsRouter.get('/', optionalAuth, anonIdentity, list);

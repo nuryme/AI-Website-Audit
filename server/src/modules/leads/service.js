@@ -83,7 +83,9 @@ export async function getOutreach({ id, userId, channel, style, cta }) {
   if (!lead) throw new ApiError(404, 'Lead not found.');
 
   const cached = lead.outreach?.[channel];
-  if (cached?.message && cached.style === style && cached.cta === cta) return cached.message;
+  if (cached?.message && cached.style === style && cached.cta === cta) {
+    return { message: cached.message, aiGenerated: true }; // only real AI copy is ever cached
+  }
 
   const context = await buildOutreachContext(lead);
   const message = await generateOutreach(context, { channel, style, cta });
@@ -92,7 +94,7 @@ export async function getOutreach({ id, userId, channel, style, cta }) {
       { _id: id },
       { $set: { [`outreach.${channel}`]: { message, style, cta } } },
     );
-    return message;
+    return { message, aiGenerated: true };
   }
-  return outreachTemplate(context, { channel, cta });
+  return { message: outreachTemplate(context, { channel, style, cta }), aiGenerated: false };
 }

@@ -90,7 +90,11 @@ export default function ReportView({ audit }) {
           {user ? (
             <SaveLeadButton audit={audit} />
           ) : (
-            <Link to="/register" className="text-sm font-medium text-accent hover:underline">
+            <Link
+              to="/register"
+              state={{ from: `/audit/${audit._id}` }}
+              className="text-sm font-medium text-accent hover:underline"
+            >
               Create a free account to save this report
             </Link>
           )}

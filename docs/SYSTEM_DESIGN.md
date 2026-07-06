@@ -74,14 +74,16 @@ Indexes: `{userId, createdAt}`, `{anonId}`.
 
 **findings[]** subdocument — `checkId, section, severity: high|medium|low, evidence (what the check saw), aiExplanation {problem, impact, recommendation, priority, estimatedImprovement}`
 
-**anon_quotas** — `ipHash (unique), count` — cap 3, then 403 with signup prompt. Ceiling: VPN evasion is accepted at this scale.
+Audits are unlimited for anonymous callers (no per-IP cap); an anonymous audit is claimed by
+the account (`anonId` → `userId`) on that device's next register/login, so it isn't lost.
+Saving an audit as a lead still requires an account.
 
 ## 6. API surface (v1)
 
 ```
 POST   /api/auth/register        POST /api/auth/login
 POST   /api/auth/logout          GET  /api/auth/me
-POST   /api/audits               # 202 + auditId (anonQuota middleware if no session)
+POST   /api/audits               # 202 + auditId (anonId-tagged if no session)
 GET    /api/audits               # list own audits; ?search=
 GET    /api/audits/:id
 GET    /api/audits/:id/events    # SSE

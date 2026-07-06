@@ -181,6 +181,12 @@ export default function LeadCard({ lead }) {
             {outreach.isError && (
               <p className="mt-2 text-sm text-accent">Couldn’t write the message right now. Please try again.</p>
             )}
+            {outreach.data?.aiGenerated === false && (
+              <p className="mt-2 text-sm text-accent">
+                AI writing is temporarily unavailable (daily quota reached) — this is a generic template, not
+                personalized to the "{STYLE_OPTIONS.find(([id]) => id === style)?.[1] ?? style}" style. Try again later for a tailored message.
+              </p>
+            )}
             {message && !outreach.isPending && (
               <div className="mt-3 rounded-lg bg-primary/10 p-3">
                 <p className="whitespace-pre-wrap text-sm">{message}</p>

@@ -22,6 +22,6 @@ export const remove = asyncHandler(async (req, res) => {
 });
 
 export const outreach = asyncHandler(async (req, res) => {
-  const message = await getOutreach({ id: req.params.id, userId: req.userId, ...req.validated });
-  res.json({ message });
+  const { message, aiGenerated } = await getOutreach({ id: req.params.id, userId: req.userId, ...req.validated });
+  res.json({ message, aiGenerated });
 });

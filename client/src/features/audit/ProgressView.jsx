@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useAuditProgress } from './useAuditProgress.js';
 import BalloonGame from './BalloonGame.jsx';
 
@@ -59,6 +60,17 @@ export default function ProgressView({ audit, id }) {
   const pct = progress.pct;
   const done = progress.status === 'done';
   const activeIdx = STAGES.findIndex((s) => s.key === progress.stage);
+
+  if (progress.error) {
+    return (
+      <div className="mx-auto max-w-md px-4 py-24 text-center">
+        <p className="mb-4 text-secondary">{progress.error}</p>
+        <Link to="/" className="font-medium text-accent hover:underline">
+          Start a new audit
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16">

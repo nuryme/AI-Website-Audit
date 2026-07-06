@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../../config/env.js';
 import { ApiError } from '../../utils/ApiError.js';
 import { User } from './model.js';
+import { Audit } from '../audits/model.js';
 
 const TOKEN_TTL = '5h';
 
@@ -15,20 +16,28 @@ export function signToken(user, exp) {
     : jwt.sign(payload, env.JWT_SECRET, { expiresIn: TOKEN_TTL });
 }
 
-export async function registerUser({ name, email, password }) {
+// Hands the anonymous audits made from this device over to the newly authenticated account,
+// so a report started before signup/login is still there after (e.g. "save as lead").
+async function claimAnonAudits(userId, anonId) {
+  if (anonId) await Audit.updateMany({ anonId, userId: null }, { $set: { userId, anonId: null } });
+}
+
+export async function registerUser({ name, email, password }, anonId) {
   const existing = await User.findOne({ email });
   if (existing) throw new ApiError(409, 'An account with that email already exists.');
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await User.create({ name, email, passwordHash });
+  await claimAnonAudits(user.id, anonId);
   return { user, token: signToken(user) };
 }
 
-export async function loginUser({ email, password }) {
+export async function loginUser({ email, password }, anonId) {
   const user = await User.findOne({ email });
   // Same error whether the email is unknown or the password is wrong — no account enumeration.
   const ok = user && (await bcrypt.compare(password, user.passwordHash));
   if (!ok) throw new ApiError(401, 'Invalid email or password.');
+  await claimAnonAudits(user.id, anonId);
   return { user, token: signToken(user) };
 }
 
